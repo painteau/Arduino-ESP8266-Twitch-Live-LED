@@ -8,7 +8,7 @@ Online LED must be connected to D1 (GPIO 5)
 Offline LED must be connected on to (GPIO 4)
 Optional : Activity LED can be connected to D4 (GPIO 2)
 
-![ESP8266](images/2.png)
+![ESP8266](images/ESP8266.png)
 
 Make sure you have the following libraries installed :
 
