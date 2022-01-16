@@ -1,19 +1,21 @@
 #include <TwitchApi.h>
-#include <ESP8266WiFiMulti.h>
+#include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 #include "CACert.h"
 #include <ArduinoJson.h> // This Sketch doesn't technically need this, but the library does so it must be installed.
 
-// Create a new application on https://dev.twitch.tv/
 //------- Replace the following! ------
+const char *ssid = "xxxxxxxxxxxxxxxxxxxx";
+const char *password = "xxxxxxxxxxxxxxxxxxxx";
 
+// Create a new application on https://dev.twitch.tv/
 #define TWITCH_CLIENT_ID "xxxxxxxxxxxxxxxxxxxx"
 #define TWITCH_ACCESSTOKEN "xxxxxxxxxxxxxxxxxxxx"
 
 
-ESP8266WiFiMulti wifiMulti;
-// WiFi connect timeout per AP. Increase when connecting takes longer.
-const uint32_t connectTimeoutMs = 5000;
+
+
+
 WiFiClientSecure client;
 TwitchApi twitch(client, TWITCH_CLIENT_ID, TWITCH_ACCESSTOKEN);
 
@@ -28,7 +30,7 @@ String twitchNames[maxNames];
 
 void loadEEPROM()
 {
-  //------- Replace the following! ------
+  //Todo: Actually add EEPROM
   twitchNames[0] = "zerator";
 }
 
@@ -70,29 +72,25 @@ void setupWifi()
     // connected
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
-    // Don't save WiFi configuration in flash - optional
-    WiFi.persistent(false);
-    delay(100);
-    //------- Replace the following! ------
-    wifiMulti.addAP("xxxxxxxxxxxxxxxxxxxx1", "xxxxxxxxxxxxxxxxxxxx1");
-    wifiMulti.addAP("xxxxxxxxxxxxxxxxxxxx2", "xxxxxxxxxxxxxxxxxxxx2");
     delay(100);
 
-  // Attempt to connect to Wifi network:
-    Serial.print("Connecting to Wifi... ");
-  // Maintain WiFi connection
-  while (wifiMulti.run(connectTimeoutMs) != WL_CONNECTED)
+    // Attempt to connect to Wifi network:
+    Serial.print("Connecting Wifi: ");
+    Serial.println(ssid);
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
         delay(500);
         digitalWrite(2, LOW); 
     }
-    Serial.print("WiFi connected to: ");
-    Serial.print(WiFi.SSID());
-    Serial.print(" ");
-    Serial.println(WiFi.localIP());
+    Serial.println("");
+    Serial.println("WiFi connected");
     digitalWrite(2, HIGH); 
- }
+    Serial.println("IP address: ");
+    IPAddress ip = WiFi.localIP();
+    Serial.println(ip);
+}
 
 void setup()
 {
